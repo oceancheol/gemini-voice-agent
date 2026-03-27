@@ -24,14 +24,16 @@ const AGENTS = {
 };
 
 // ── DOM ───────────────────────────────────────────────────────────────────────
-const agentBtns  = document.querySelectorAll('.agent-btn');
-const callBtn    = document.getElementById('call-btn');
-const avatarWrap = document.getElementById('avatar-wrap');
-const avatarEl   = document.getElementById('avatar');
-const agentName  = document.getElementById('agent-name');
-const callStatus = document.getElementById('call-status');
-const iconCall   = callBtn.querySelector('.icon-call');
-const iconEnd    = callBtn.querySelector('.icon-end');
+const agentBtns      = document.querySelectorAll('.agent-btn');
+const callBtn        = document.getElementById('call-btn');
+const avatarWrap     = document.getElementById('avatar-wrap');
+const avatarEl       = document.getElementById('avatar');
+const agentName      = document.getElementById('agent-name');
+const callStatus     = document.getElementById('call-status');
+const transcriptEl   = document.getElementById('transcript');
+const transcriptInner = document.getElementById('transcript-inner');
+const iconCall       = callBtn.querySelector('.icon-call');
+const iconEnd        = callBtn.querySelector('.icon-end');
 
 // ── Init UI ───────────────────────────────────────────────────────────────────
 updateAgentUI(selectedAgent);
@@ -118,8 +120,11 @@ function handleServerMessage(event) {
       nextPlayTime = audioCtx ? audioCtx.currentTime : 0;
       break;
 
+    case 'transcript':
+      addTranscript(msg.role, msg.text);
+      break;
+
     case 'turnComplete':
-      // Agent finished speaking — nothing to do in MVP
       break;
 
     case 'error':
@@ -227,6 +232,7 @@ function endCall() {
   iconEnd.style.display  = 'none';
   avatarWrap.classList.remove('ringing');
   setStatus('통화 대기', '');
+  clearTranscript();
 
   cleanup();
 }
@@ -265,6 +271,23 @@ function updateAgentUI(agentId) {
 function setStatus(text, cls) {
   callStatus.textContent = text;
   callStatus.className   = 'call-status' + (cls ? ' ' + cls : '');
+}
+
+function addTranscript(role, text) {
+  if (!text?.trim()) return;
+  const line = document.createElement('div');
+  line.className = `transcript-line ${role}`;
+  line.textContent = text;
+  transcriptInner.appendChild(line);
+  // 최근 20줄만 유지
+  while (transcriptInner.children.length > 20) {
+    transcriptInner.removeChild(transcriptInner.firstChild);
+  }
+  transcriptEl.scrollTop = transcriptEl.scrollHeight;
+}
+
+function clearTranscript() {
+  transcriptInner.innerHTML = '';
 }
 
 // ── Audio Utils ───────────────────────────────────────────────────────────────

@@ -99,12 +99,54 @@ header {
 
 /* ── Call display ───────────────────────────────────────────────────────── */
 .call-display {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
+  padding: 24px 0 16px;
+}
+
+/* ── Transcript ─────────────────────────────────────────────────────────── */
+.transcript {
+  width: 100%;
+  flex: 1;
+  min-height: 60px;
+  max-height: 120px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.transcript-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 4px;
+}
+
+.transcript-line {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 90%;
+  word-break: keep-all;
+}
+
+.transcript-line.agent {
+  background: var(--surface);
+  color: var(--text);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.transcript-line.user {
+  background: var(--accent);
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
 
 .avatar-wrap {
