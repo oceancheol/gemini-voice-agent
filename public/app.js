@@ -20,6 +20,7 @@ const AGENTS = {
   jisoo: { name: '지수', emoji: '📝' },
   rose:  { name: '로즈', emoji: '🌹' },
   lisa:  { name: '리사', emoji: '💻' },
+  jenny: { name: '제니', emoji: '💎' },
 };
 
 // ── DOM ───────────────────────────────────────────────────────────────────────
