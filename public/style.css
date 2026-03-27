@@ -1,0 +1,199 @@
+/* ── Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Variables ──────────────────────────────────────────────────────────── */
+:root {
+  --bg:           #0c0c14;
+  --surface:      #14141f;
+  --border:       #252535;
+  --accent:       #7c6af7;
+  --accent-glow:  rgba(124, 106, 247, 0.25);
+  --text:         #e8e8f4;
+  --muted:        #6868a0;
+  --green:        #4ade80;
+  --green-glow:   rgba(74, 222, 128, 0.2);
+  --red:          #f87171;
+  --red-glow:     rgba(248, 113, 113, 0.2);
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ── Container ──────────────────────────────────────────────────────────── */
+.container {
+  height: 100dvh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top, 48px) 28px env(safe-area-inset-bottom, 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding-top: 8px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #a89cff 0%, #7c6af7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* ── Agent selector ─────────────────────────────────────────────────────── */
+.agent-selector {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 32px;
+}
+
+.agent-btn {
+  flex: 1;
+  padding: 11px 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  font-family: inherit;
+}
+
+.agent-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+/* ── Call display ───────────────────────────────────────────────────────── */
+.call-display {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.avatar-wrap.ringing .avatar-ring {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px var(--green-glow), 0 0 40px var(--green-glow);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--green-glow), 0 0 40px var(--green-glow); }
+  50%       { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0.05), 0 0 60px var(--green-glow); }
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  user-select: none;
+  transition: border-color 0.3s ease;
+}
+
+.agent-name {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.call-status {
+  font-size: 15px;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+.call-status.active {
+  color: var(--green);
+}
+
+.call-status.error {
+  color: var(--red);
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────── */
+.controls {
+  padding-bottom: 8px;
+}
+
+.call-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: var(--green);
+  color: #0d1f0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 6px 24px var(--green-glow);
+}
+
+.call-btn.active {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 6px 24px var(--red-glow);
+}
+
+.call-btn:active {
+  transform: scale(0.94);
+}
+
+.call-btn svg {
+  width: 32px;
+  height: 32px;
+}

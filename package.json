@@ -1,0 +1,27 @@
+{
+  "name": "gemini-voice-agent",
+  "version": "1.0.0",
+  "description": "맥미니에서 실행하는 실시간 음성 대화 웹앱. 아이폰 브라우저로 접속해서 AI 에이전트와 전화통화처럼 대화한다.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oceancheol/gemini-voice-agent.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/oceancheol/gemini-voice-agent/issues"
+  },
+  "homepage": "https://github.com/oceancheol/gemini-voice-agent#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "ws": "^8.20.0"
+  }
+}
