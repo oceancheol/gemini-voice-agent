@@ -75,11 +75,13 @@ async function startCall() {
 
     ws.onmessage = handleServerMessage;
 
-    ws.onclose = () => {
+    ws.onclose = (e) => {
+      console.log('[ws] closed', e.code, e.reason);
       if (isCallActive) endCall();
     };
 
-    ws.onerror = () => {
+    ws.onerror = (e) => {
+      console.error('[ws] error', e);
       setStatus('연결 실패', 'error');
       endCall();
     };
@@ -98,6 +100,8 @@ function handleServerMessage(event) {
   } catch {
     return;
   }
+
+  console.log('[server→browser]', msg.type, msg.message || '');
 
   switch (msg.type) {
     case 'ready':
@@ -139,8 +143,10 @@ async function onCallReady() {
   try {
     await startMicrophone();
   } catch (err) {
-    setStatus('마이크 오류: ' + err.message, 'error');
-    endCall();
+    console.error('[mic] 마이크 오류:', err.name, err.message);
+    setStatus('마이크 오류: ' + err.name, 'error');
+    // endCall을 늦게 호출해서 에러 상태가 보이게 함
+    setTimeout(endCall, 2000);
   }
 }
 

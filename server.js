@@ -23,7 +23,7 @@ const wss = new WebSocketServer({ server });
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── Gemini Live API ──────────────────────────────────────────────────────────
-const GEMINI_MODEL = 'models/gemini-2.0-flash-live-001';
+const GEMINI_MODEL = 'models/gemini-2.5-flash-native-audio-latest';
 const GEMINI_WS_URL =
   `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent` +
   `?key=${process.env.GEMINI_API_KEY}`;
@@ -55,17 +55,17 @@ wss.on('connection', (browserWs) => {
         geminiWs.send(JSON.stringify({
           setup: {
             model: GEMINI_MODEL,
-            generationConfig: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: {
-                    voiceName: agent.voice,
+            generation_config: {
+              response_modalities: ['AUDIO'],
+              speech_config: {
+                voice_config: {
+                  prebuilt_voice_config: {
+                    voice_name: agent.voice,
                   },
                 },
               },
             },
-            systemInstruction: {
+            system_instruction: {
               parts: [{ text: agent.systemPrompt }],
             },
           },
@@ -81,20 +81,24 @@ wss.on('connection', (browserWs) => {
         }
 
         // Setup complete → tell browser it's ready
-        if (geminiMsg.setupComplete !== undefined) {
+        if (geminiMsg.setupComplete !== undefined || geminiMsg.setup_complete !== undefined) {
           console.log('[gemini] Setup complete');
           send(browserWs, { type: 'ready' });
           return;
         }
 
-        const content = geminiMsg.serverContent;
+        console.log('[gemini] msg keys:', Object.keys(geminiMsg));
+
+        const content = geminiMsg.serverContent || geminiMsg.server_content;
         if (!content) return;
 
         // Audio / text parts
-        if (content.modelTurn?.parts) {
-          for (const part of content.modelTurn.parts) {
-            if (part.inlineData?.data) {
-              send(browserWs, { type: 'audio', data: part.inlineData.data });
+        const turn = content.modelTurn || content.model_turn;
+        if (turn?.parts) {
+          for (const part of turn.parts) {
+            const inlineData = part.inlineData || part.inline_data;
+            if (inlineData?.data) {
+              send(browserWs, { type: 'audio', data: inlineData.data });
             }
             if (part.text) {
               send(browserWs, { type: 'transcript', role: 'agent', text: part.text });
@@ -103,7 +107,7 @@ wss.on('connection', (browserWs) => {
         }
 
         // Turn complete
-        if (content.turnComplete) {
+        if (content.turnComplete || content.turn_complete) {
           send(browserWs, { type: 'turnComplete' });
         }
 
@@ -128,9 +132,9 @@ wss.on('connection', (browserWs) => {
     } else if (msg.type === 'audio') {
       if (geminiWs?.readyState === WebSocket.OPEN) {
         geminiWs.send(JSON.stringify({
-          realtimeInput: {
-            mediaChunks: [{
-              mimeType: 'audio/pcm;rate=16000',
+          realtime_input: {
+            media_chunks: [{
+              mime_type: 'audio/pcm;rate=16000',
               data: msg.data,
             }],
           },
